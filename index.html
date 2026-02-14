@@ -1,0 +1,78 @@
+<div id="tab-settings" class="tab-content" style="display: none;">
+    <div class="settings-list">
+        
+        <div class="setting-row" onclick="editName()">
+            <i class="fa fa-user-pen"></i>
+            <span>تعديل الاسم الشخصي</span>
+            <i class="fa fa-chevron-left" style="font-size:10px; color:#ccc;"></i>
+        </div>
+
+        <div class="setting-row" onclick="resetPassword()">
+            <i class="fa fa-lock"></i>
+            <span>تغيير كلمة المرور</span>
+            <i class="fa fa-chevron-left" style="font-size:10px; color:#ccc;"></i>
+        </div>
+
+        <div class="setting-row" onclick="toggleNotifications()">
+            <i class="fa fa-bell"></i>
+            <span>إعدادات الإشعارات</span>
+            <label class="switch" style="margin-right: auto;">
+                <input type="checkbox" id="notifyCheck">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="setting-row danger" onclick="logout()">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>تسجيل الخروج من الحساب</span>
+        </div>
+
+    </div>
+</div>
+
+<style>
+/* ستايل إضافي للإعدادات */
+.switch { position: relative; display: inline-block; width: 34px; height: 20px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; inset: 0; background-color: #ccc; transition: .4s; border-radius: 20px; }
+.slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background-color: var(--p); }
+input:checked + .slider:before { transform: translateX(14px); }
+</style>
+
+<script type="module">
+    // أضف هذه الوظائف البرمجية داخل الـ Script Module الخاص بك
+    
+    import { sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // 1. وظيفة تعديل الاسم
+    window.editName = async () => {
+        const newName = prompt("أدخل الاسم الجديد:");
+        if (newName && auth.currentUser) {
+            try {
+                await updateDoc(doc(db, "users", auth.currentUser.uid), { name: newName });
+                location.reload(); // تحديث الصفحة لرؤية الاسم الجديد
+            } catch (e) { alert("حدث خطأ أثناء التحديث"); }
+        }
+    };
+
+    // 2. وظيفة إعادة تعيين كلمة المرور
+    window.resetPassword = () => {
+        if (auth.currentUser.email) {
+            sendPasswordResetEmail(auth, auth.currentUser.email)
+                .then(() => alert("تم إرسال رابط تغيير كلمة المرور إلى بريدك الإلكتروني!"))
+                .catch((error) => alert("خطأ: " + error.message));
+        }
+    };
+
+    // 3. وظيفة الإشعارات
+    window.toggleNotifications = () => {
+        const check = document.getElementById('notifyCheck');
+        if (check.checked) {
+            Notification.requestPermission().then(perm => {
+                if (perm === 'granted') alert("تم تفعيل الإشعارات بنجاح!");
+            });
+        }
+    };
+</script>
