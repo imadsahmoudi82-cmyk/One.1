@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ONE 1</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root { --p: #6c5ce7; --bg: #ffffff; --gray: #f8f9fa; --text: #1a1a1a; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 80px; overflow-x: hidden; }
+        
+        #loading-screen { position: fixed; inset: 0; background: #fff; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+        .loader { width: 35px; height: 35px; border: 3px solid #eee; border-top-color: var(--p); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        header { padding: 10px 15px; display: flex; align-items: center; gap: 12px; background: #fff; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid #f0f0f0; }
+        .site-logo-text { font-size: 20px; font-weight: 900; color: var(--p); letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; }
+        .search-bar { flex: 1; background: var(--gray); border-radius: 20px; padding: 8px 15px; display: flex; align-items: center; }
+        .search-bar input { border: none; background: none; width: 100%; outline: none; font-size: 14px; margin-right: 8px; }
+        .w-btn { width: 38px; height: 38px; background: var(--p); color: #fff; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px; flex-shrink: 0; }
+
+        .page { display: none; padding: 15px; animation: fadeIn 0.3s ease; min-height: calc(100vh - 160px); }
+        .page.active { display: flex; flex-direction: column; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .support-card { background: var(--gray); border-radius: 15px; padding: 12px; border: 1px solid #eee; display: flex; align-items: center; gap: 10px; margin-top: auto; margin-bottom: 20px; cursor: pointer; }
+        .support-icon { width: 35px; height: 35px; background: var(--p); color: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+        .support-info { flex: 1; text-align: right; }
+        .support-info h4 { margin: 0; font-size: 13px; color: #333; }
+        .support-info p { margin: 0; font-size: 11px; color: #777; }
+
+        .profile-card { background: var(--gray); border-radius: 25px; padding: 30px; text-align: center; margin-top: 10px; }
+        .v-badge { color: var(--p); margin-right: 5px; font-size: 1.2rem; vertical-align: middle; }
+
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; z-index: 1000; align-items: center; }
+        .nav-item { color: #bbb; font-size: 24px; cursor: pointer; transition: 0.2s; }
+        .nav-item.active { color: var(--p); }
+        .plus-btn { background: var(--p); width: 55px; height: 55px; border-radius: 50%; color: #fff !important; display: flex; align-items: center; justify-content: center; margin-top: -45px; border: 4px solid #fff; box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3); }
+
+        .logout-btn { color: #ff4757; border: 1px solid #ff4757; background: none; padding: 8px 20px; border-radius: 12px; cursor: pointer; font-weight: bold; margin-top: 20px; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <div id="loading-screen">
+        <div class="loader"></div>
+    </div>
+
+    <header>
+        <div class="site-logo-text">ONE 1</div>
+        <div class="search-bar">
+            <i class="fa fa-search" style="color:#aaa;"></i>
+            <input type="text" placeholder="ابحث في وان 1...">
+        </div>
+        <div class="w-btn">W</div>
+    </header>
+
+    <div id="home" class="page active">
+        <div style="text-align:center; margin-top:100px; color:#bbb;">
+            <i class="fa-solid fa-store" style="font-size:50px; opacity:0.3;"></i>
+            <p>لا توجد منتجات معروضة حالياً</p>
+        </div>
+    </div>
+
+    <div id="fav" class="page">
+        <h3 style="text-align: center; color: #888; margin-top: 50px;">المفضلة فارغة</h3>
+    </div>
+
+    <div id="chat" class="page">
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #aaa;">
+            <p>لا توجد محادثات نشطة</p>
+        </div>
+        
+        <div class="support-card" onclick="alert('جاري تحويلك للدعم الفني...')">
+            <div class="support-icon"><i class="fa-solid fa-headset"></i></div>
+            <div class="support-info">
+                <h4>الدعم الفني ONE 1</h4>
+                <p>متاحون لمساعدتك على مدار الساعة</p>
+            </div>
+            <i class="fa-solid fa-chevron-left" style="color: #ccc; font-size: 12px;"></i>
+        </div>
+    </div>
+
+    <div id="profile" class="page">
+        <div class="profile-card">
+            <div style="width:70px; height:70px; background:#ddd; border-radius:50%; margin:0 auto 15px;"></div>
+            <h2 id="uName">جاري التحميل...</h2>
+            <p id="uEmail" style="color:#888; margin-top: -10px; font-size: 13px;"></p>
+            <button class="logout-btn" id="outBtn">تسجيل الخروج</button>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="go('home', this)"><i class="fa-solid fa-house"></i></div>
+        <div class="nav-item" onclick="go('fav', this)"><i class="fa-regular fa-heart"></i></div>
+        <div class="nav-item plus-btn"><i class="fa fa-plus"></i></div>
+        <div class="nav-item" onclick="go('chat', this)"><i class="fa-regular fa-comment-dots"></i></div>
+        <div class="nav-item" onclick="go('profile', this)"><i class="fa-regular fa-user"></i></div>
+    </nav>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const conf = { 
+            apiKey: "AIzaSyDj1jWQZHnELXe_eFkfGpi3F3_jPGhPm7I", 
+            authDomain: "one1-95c0e.firebaseapp.com", 
+            projectId: "one1-95c0e", 
+            appId: "1:1090900617422:web:f6e9c11bb7a090c39ec89f" 
+        };
+
+        const app = initializeApp(conf);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                document.getElementById('loading-screen').style.display = 'none';
+                try {
+                    const s = await getDoc(doc(db, "users", user.uid));
+                    if (s.exists()) {
+                        const d = s.data();
+                        const badge = d.isVerified ? ' <i class="fa-solid fa-patch-check v-badge"></i>' : '';
+                        document.getElementById('uName').innerHTML = (d.name || "مستخدم ONE 1") + badge;
+                        document.getElementById('uEmail').innerText = d.email;
+                    }
+                } catch (e) { console.log(e); }
+            } else {
+                window.location.href = "auth.html";
+            }
+        });
+
+        window.go = (id, el) => {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            el.classList.add('active');
+        };
+
+        document.getElementById('outBtn').onclick = () => signOut(auth);
+    </script>
+</body>
+</html>
