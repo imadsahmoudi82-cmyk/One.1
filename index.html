@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="mainHtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ONE 1 | PRO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root { --p: #6c5ce7; --bg: #ffffff; --gray: #f1f3f5; --text: #2d3436; --red: #ff4757; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background: var(--bg); color: var(--text); margin: 0; padding-bottom: 80px; overflow-x: hidden; display: none; }
+        
+        /* الهيدر */
+        header { padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; background: #fff; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+        .logo { font-size: 22px; font-weight: 900; color: var(--p); letter-spacing: -1px; }
+        .search-area { flex: 1; margin: 0 15px; }
+        .search-area input { width: 100%; border: none; background: var(--gray); padding: 10px 15px; border-radius: 12px; outline: none; }
+        
+        /* الصفحات */
+        .page { display: none; padding: 20px; min-height: 80vh; animation: fadeIn 0.3s ease; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* بروفايل انستجرام */
+        .profile-header { text-align: center; margin-bottom: 20px; }
+        .avatar-wrap { position: relative; width: 110px; height: 110px; margin: 0 auto 15px; cursor: pointer; }
+        .avatar-wrap img { width: 100%; height: 100%; border-radius: 50%; border: 3px solid var(--p); padding: 3px; object-fit: cover; background: #eee; }
+        .cam-badge { position: absolute; bottom: 5px; right: 5px; background: var(--p); color: #fff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid #fff; font-size: 14px; }
+
+        .stats-container { display: flex; justify-content: center; gap: 30px; margin: 20px 0; border-top: 1px solid var(--gray); border-bottom: 1px solid var(--gray); padding: 15px 0; }
+        .stat-item { text-align: center; }
+        .stat-value { font-weight: 800; font-size: 18px; display: block; }
+        .stat-label { font-size: 11px; color: #7f8c8d; }
+
+        /* الأزرار والإعدادات */
+        .action-item { background: var(--gray); padding: 16px; border-radius: 18px; display: flex; align-items: center; margin-bottom: 10px; cursor: pointer; }
+        .action-item i { margin: 0 12px; color: var(--p); font-size: 18px; width: 22px; text-align: center; }
+        .action-text { flex: 1; font-weight: 600; font-size: 14px; }
+
+        /* شريط التنقل السفلي - المعاد */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #f0f0f0; z-index: 2000; align-items: center; }
+        .nav-item { color: #bdc3c7; font-size: 22px; cursor: pointer; transition: 0.2s; }
+        .nav-item.active { color: var(--p); }
+        .plus-fab { background: var(--p); width: 55px; height: 55px; border-radius: 50%; color: #fff !important; display: flex; align-items: center; justify-content: center; margin-top: -45px; box-shadow: 0 8px 20px rgba(108, 92, 231, 0.4); font-size: 24px; }
+
+        /* مودال احترافي */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 4000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
+        .modal-content { background: #fff; width: 100%; max-width: 340px; border-radius: 28px; padding: 30px; text-align: center; }
+        .modal input { width: 100%; padding: 14px; border-radius: 15px; border: 1px solid #eee; margin: 15px 0; outline: none; background: #f9f9f9; text-align: center; font-size: 16px; }
+        .btn-p { background: var(--p); color: #fff; border: none; padding: 14px; border-radius: 15px; font-weight: bold; width: 100%; cursor: pointer; font-size: 16px; }
+
+        /* التنبيه (Toast) */
+        #toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #2d3436; color: #fff; padding: 12px 25px; border-radius: 50px; font-size: 14px; z-index: 5000; display: none; box-shadow: 0 10px 20px rgba(0,0,0,0.2); animation: fadeInUp 0.4s ease; }
+        @keyframes fadeInUp { from { bottom: 60px; opacity: 0; } to { bottom: 100px; opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div id="toast"></div>
+
+    <header>
+        <div id="topInitial" style="width:35px;height:35px;background:var(--p);color:#fff;display:flex;align-items:center;justify-content:center;border-radius:10px;font-weight:bold;">W</div>
+        <div class="search-area"><input type="text" id="searchInp" placeholder="ابحث..."></div>
+        <div class="logo">ONE 1</div>
+    </header>
+
+    <div id="home" class="page active">
+        <div style="text-align: center; margin-top: 120px; color: #ccc;">
+            <i class="fa-solid fa-store" style="font-size: 60px; margin-bottom: 20px;"></i>
+            <p id="txtHomeEmpty">الرئيسية قيد التطوير</p>
+        </div>
+    </div>
+
+    <div id="favorites" class="page"><h3>المفضلة</h3></div>
+    <div id="chats" class="page"><h3>الدردشات</h3></div>
+
+    <div id="profile" class="page">
+        <div class="profile-header">
+            <div class="avatar-wrap" onclick="document.getElementById('fileInput').click()">
+                <img src="" id="uImg">
+                <div class="cam-badge"><i class="fa-solid fa-camera"></i></div>
+                <input type="file" id="fileInput" hidden accept="image/*" onchange="uploadImg(this)">
+            </div>
+            <div style="display:flex; align-items:center; justify-content:center; gap:5px;">
+                <h2 id="uName" style="margin:0; font-size: 22px;">...</h2>
+                <div id="verifiedContainer"></div>
+            </div>
+            <p id="uEmail" style="color: #95a5a6; font-size: 13px; margin: 5px 0;"></p>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-item"><span class="stat-value" id="countPosts">0</span><span class="stat-label">منشور</span></div>
+            <div class="stat-item"><span class="stat-value" id="countFollowers">0</span><span class="stat-label">متابع</span></div>
+            <div class="stat-item"><span class="stat-value" id="countFollowing">0</span><span class="stat-label">أتابعه</span></div>
+        </div>
+
+        <div class="settings-section">
+            <div class="action-item" onclick="openM('lang')">
+                <i class="fa-solid fa-globe"></i>
+                <span class="action-text">اللغة / Language</span>
+            </div>
+            <div class="action-item" onclick="openM('name')">
+                <i class="fa-regular fa-circle-user"></i>
+                <span class="action-text">تغيير الاسم</span>
+            </div>
+            <div class="action-item" onclick="openM('reset')">
+                <i class="fa-solid fa-lock-open"></i>
+                <span class="action-text">تغيير كلمة السر</span>
+            </div>
+            <div id="btnLogout" style="background:#fff5f5; padding:15px; border-radius:18px; display:flex; align-items:center; cursor:pointer; color:var(--red); justify-content: center; font-weight: bold; margin-top: 20px;">
+                <i class="fa-solid fa-power-off" style="margin-left:10px;"></i>
+                <span>تسجيل الخروج</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="m" class="modal">
+        <div class="modal-content">
+            <h3 id="mT">تعديل</h3>
+            <div id="langBox" style="display:none; flex-direction:column; gap:10px;">
+                <button class="btn-p" onclick="changeL('ar')" style="background:#f1f3f5; color:#333;">العربية</button>
+                <button class="btn-p" onclick="changeL('en')" style="background:#f1f3f5; color:#333;">English</button>
+            </div>
+            <input type="text" id="mInp" placeholder="اكتب هنا...">
+            <p id="mMsg" style="display:none; color:#7f8c8d; font-size:13px; margin-bottom:20px;"></p>
+            <button class="btn-p" id="mBtn" onclick="saveM()">تحديث</button>
+            <div onclick="closeM()" style="margin-top:20px; color:#aaa; cursor:pointer; font-size:13px;">إلغاء</div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <div class="nav-item" onclick="tab('profile', this)"><i class="fa-regular fa-user"></i></div>
+        <div class="nav-item" onclick="tab('chats', this)"><i class="fa-regular fa-comment-dots"></i></div>
+        <div class="nav-item plus-fab" onclick="alert('قريباً: إضافة إعلان')"><i class="fa-solid fa-plus"></i></div>
+        <div class="nav-item" onclick="tab('favorites', this)"><i class="fa-regular fa-heart"></i></div>
+        <div class="nav-item active" onclick="tab('home', this)"><i class="fa-solid fa-house"></i></div>
+    </nav>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const config = { apiKey: "AIzaSyDj1jWQZHnELXe_eFkfGpi3F3_jPGhPm7I", authDomain: "one1-95c0e.firebaseapp.com", projectId: "one1-95c0e", appId: "1:1090900617422:web:f6e9c11bb7a090c39ec89f" };
+        const app = initializeApp(config);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // التنبيه الأنيق
+        window.showT = (msg) => {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 3000);
+        };
+
+        // رفع الصورة من الجهاز وتحويلها لـ Base64 (أسهل طريقة للحفظ)
+        window.uploadImg = (input) => {
+            const file = input.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    await updateDoc(doc(db, "users", auth.currentUser.uid), { photo: e.target.result });
+                    showT("تم تحديث الصورة بنجاح ✅");
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        let mode = '';
+        window.openM = (m) => {
+            mode = m;
+            document.getElementById('m').style.display = 'flex';
+            document.getElementById('langBox').style.display = (m==='lang')?'flex':'none';
+            document.getElementById('mInp').style.display = (m==='name')?'block':'none';
+            document.getElementById('mBtn').style.display = (m!=='lang')?'block':'none';
+            document.getElementById('mMsg').style.display = (m==='reset')?'block':'none';
+            if(m==='name') document.getElementById('mT').innerText = "تغيير الاسم";
+            if(m==='reset') { document.getElementById('mT').innerText = "تغيير كلمة السر"; document.getElementById('mMsg').innerText = "سنرسل رابط التحقق لإيميلك الآن."; }
+            if(m==='lang') document.getElementById('mT').innerText = "اختر اللغة";
+        };
+        window.closeM = () => document.getElementById('m').style.display = 'none';
+
+        window.saveM = async () => {
+            const ref = doc(db, "users", auth.currentUser.uid);
+            if(mode === 'name') {
+                const n = document.getElementById('mInp').value;
+                if(n) await updateDoc(ref, { name: n });
+                showT("تم تحديث الاسم بنجاح");
+            }
+            if(mode === 'reset') {
+                await sendPasswordResetEmail(auth, auth.currentUser.email);
+                showT("تم إرسال الرابط لإيميلك 📧");
+            }
+            closeM();
+        };
+
+        window.changeL = (l) => { localStorage.setItem('appLang', l); location.reload(); };
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.body.style.display = "block";
+                onSnapshot(doc(db, "users", user.uid), (ds) => {
+                    if (ds.exists()) {
+                        const d = ds.data();
+                        document.getElementById('uName').innerText = d.name || "User";
+                        document.getElementById('uEmail').innerText = user.email;
+                        document.getElementById('uImg').src = d.photo || `https://ui-avatars.com/api/?background=6c5ce7&color=fff&name=${d.name}`;
+                        document.getElementById('verifiedContainer').innerHTML = d.isVerified ? `<svg style="width:20px; fill:var(--p)" viewBox="0 0 24 24"><path d="M23,12L20.56,9.22L20.9,5.54L17.29,4.72L15.4,1.54L12,3L8.6,1.54L6.71,4.72L3.1,5.53L3.44,9.21L1,12L3.44,14.78L3.1,18.47L6.71,19.29L8.6,22.47L12,21L15.4,22.46L17.29,19.28L20.9,18.46L20.56,14.79L23,12M10,17L6,13L7.41,11.59L10,14.17L16.59,7.58L18,9L10,17Z"></path></svg>` : '';
+                    }
+                });
+            } else { window.location.href = "auth.html"; }
+        });
+
+        window.tab = (id, el) => {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            el.classList.add('active');
+        };
+
+        document.getElementById('btnLogout').onclick = () => signOut(auth);
+    </script>
+</body>
+</html>
